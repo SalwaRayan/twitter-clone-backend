@@ -7,9 +7,10 @@ const TwitterSchema = Schema({
     user: { 
         type: Schema.Types.ObjectId, ref: 'User' 
     },
-    retweets: [
-        { type: Schema.Types.ObjectId, ref: 'Tweet' }
-    ],
+    retweets: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Tweet' 
+    }],
     comments: [{ 
         type: Schema.Types.ObjectId, ref: 'Comment' }]
 }, {

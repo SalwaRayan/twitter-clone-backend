@@ -2,22 +2,33 @@ const { Schema, model } = require('mongoose')
 
 const UserSchema = Schema({
   username: {
-    type: String
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
   },
   password: {
-    type: String
+    type: String,
+    required: true
   },
   profilePicture: {
-    type: String
+    type: String,
+    default: ""
   },
   bannerPicture: {
-    type: String
+    type: String,
+    default: ""
   },
   description: {
-    type: String
+    type: String,
+    default: ""
   },
   birthDate: {
-    type: Date
+    type: Date,
+    default: Date.now(),
+    // required: true
   },
   followers: [{
     type: Schema.Types.ObjectId,

@@ -6,6 +6,8 @@ const session = require("express-session")
 const passport = require("passport")
 const mongoose = require("mongoose")
 
+const authRoutes = require('./routes/auth')
+
 const dbName = 'test'
 const dbUrl = `mongodb+srv://salwarayan:twitterclone@cluster0.66nkv.mongodb.net/${dbName}`
 
@@ -23,6 +25,7 @@ db.once('open', () => {
 app.use(express.json())
 app.use(express.static('public'))
 
+
 app.use(session({
   secret: "secret",
   resave: true,
@@ -37,6 +40,9 @@ app.use(cors({
 app.use(passport.initialize())
 app.use(passport.session())
 
+
+// routes
+app.use('/', authRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
