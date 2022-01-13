@@ -27,8 +27,8 @@ const UserSchema = Schema({
   },
   birthDate: {
     type: Date,
-    default: Date.now(),
-    // required: true
+    // default: Date.now(),
+    required: true
   },
   followers: [{
     type: Schema.Types.ObjectId,
