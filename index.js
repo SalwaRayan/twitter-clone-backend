@@ -25,8 +25,6 @@ db.once('open', () => {
   console.log(`Connection to ${dbName} established`)
 })
 
-
-
 app.use(session({
   secret: "secret",
   resave: true,

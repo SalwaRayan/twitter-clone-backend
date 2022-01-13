@@ -50,4 +50,5 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-module.exports = app;
+module.exports = app
+
