@@ -22,11 +22,12 @@ const UserSchema = Schema({
     default: ""
   },
   description: {
-    type: String
+    type: String,
+    default: ""
   },
   birthDate: {
     type: Date,
-    // default: Date.now
+    // default: Date.now(),
     required: true
   },
   followers: [{
