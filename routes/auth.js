@@ -1,4 +1,5 @@
 const express = require("express");
+const { body } = require("express-validator");
 const app = express();
 const passport = require("../config/passport");
 
@@ -6,8 +7,8 @@ const passport = require("../config/passport");
 const User = require("../models/User");
 
 // login route
-app.post("/login", passport.authenticate('local'), async (req, res) => {
-  console.log(req.user)
+app.post("/login", passport.authenticate("local"), async (req, res) => {
+  console.log(req.user);
   if (req.user) {
     req.logIn(req.user, (err) => {
       if (err) throw res.status(500).json({ error: err });
@@ -17,13 +18,17 @@ app.post("/login", passport.authenticate('local'), async (req, res) => {
 });
 
 // logout route
-app.delete('/logout', (req, res) => {
-  req.logout()
-  res.status(200).send('ok')
-}) 
+app.delete("/logout", (req, res) => {
+  req.logout();
+  res.status(200).send("ok");
+});
 
 // signup route
-app.post("/signup", async (req, res) => {
+app.post("/signup", 
+  body("username").exists(),
+  body('email').exists().isEmail().withMessage('isInvalid'),
+  body("password").exists().isStrongPassword(),
+  async (req, res) => {
   try {
     // const { email, username } = req.body
     let user = await User.findOne({
@@ -50,5 +55,4 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-module.exports = app
-
+module.exports = app;
