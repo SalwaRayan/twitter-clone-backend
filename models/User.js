@@ -1,4 +1,6 @@
 const { Schema, model } = require('mongoose')
+const moment = require('moment')
+moment().format()
 
 const UserSchema = Schema({
   username: {
@@ -11,7 +13,8 @@ const UserSchema = Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minLenght: 8
   },
   profilePicture: {
     type: String,
@@ -27,8 +30,8 @@ const UserSchema = Schema({
   },
   birthDate: {
     type: Date,
-    // default: Date.now(),
-    required: true
+    default: Date.now(),
+    // required: true
   },
   followers: [{
     type: Schema.Types.ObjectId,

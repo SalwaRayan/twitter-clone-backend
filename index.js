@@ -12,7 +12,6 @@ app.use(express.static('public'))
 const authRoutes = require('./routes/auth')
 const usersRoutes = require('./routes/users')
 const filesRoutes = require('./routes/files')
-const userRoutes = require('./routes/user')
 
 const dbName = 'test'
 const dbUrl = `mongodb+srv://salwarayan:twitterclone@cluster0.66nkv.mongodb.net/${dbName}`
@@ -44,7 +43,7 @@ app.use(passport.session())
 
 // routes
 app.use('/', authRoutes)
-app.use('/', usersRoutes)
+app.use('/users', usersRoutes)
 app.use('/files', filesRoutes)
 
 app.listen(port, () => {

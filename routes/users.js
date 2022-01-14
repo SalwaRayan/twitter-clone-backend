@@ -2,9 +2,8 @@ const express = require('express')
 const User = require("../models/User")
 const app = express()
 
-
-app.put('/users/:id', async (req, res) => {
-
+// update user
+app.put('/:id', async (req, res) => {
     const { id } = req.params
 
     try {
@@ -22,6 +21,13 @@ app.put('/users/:id', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err })
     }
+})
+
+// show all users
+app.get('/', async (req, res) => {
+    const users = await User.find().exec()
+
+    res.json(users)
 })
 
 module.exports = app

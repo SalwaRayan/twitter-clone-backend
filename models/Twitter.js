@@ -2,7 +2,8 @@ const { Schema, model } = require('mongoose')
 
 const TwitterSchema = Schema({
     content: {
-        type: String
+        type: String,
+        maxLenght: 280
     },
     user: { 
         type: Schema.Types.ObjectId, ref: 'User' 
