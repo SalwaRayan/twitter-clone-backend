@@ -10,6 +10,7 @@ app.use(express.json())
 app.use(express.static('public'))
 
 const authRoutes = require('./routes/auth')
+const usersRoutes = require('./routes/users')
 const filesRoutes = require('./routes/files')
 const userRoutes = require('./routes/user')
 
@@ -43,6 +44,7 @@ app.use(passport.session())
 
 // routes
 app.use('/', authRoutes)
+app.use('/', usersRoutes)
 app.use('/files', filesRoutes)
 
 app.listen(port, () => {
