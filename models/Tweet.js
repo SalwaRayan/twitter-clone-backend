@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose')
 
-const TwitterSchema = Schema({
-    content: {
+const TweetSchema = Schema({
+    tweetContent: {
         type: String
     },
     user: { 
@@ -17,6 +17,6 @@ const TwitterSchema = Schema({
     timestamps: true
 })
 
-const Twitter = model('Twitter', TwitterSchema)
+const Tweet = model('Tweet', TweetSchema)
 
-module.exports = Twitter
+module.exports = Tweet
