@@ -11,6 +11,7 @@ app.use(express.static('public'))
 
 const authRoutes = require('./routes/auth')
 const usersRoutes = require('./routes/users')
+const filesRoutes = require('./routes/files')
 
 const dbName = 'test'
 const dbUrl = `mongodb+srv://salwarayan:twitterclone@cluster0.66nkv.mongodb.net/${dbName}`
@@ -43,6 +44,7 @@ app.use(passport.session())
 // routes
 app.use('/', authRoutes)
 app.use('/', usersRoutes)
+app.use('/files', filesRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
