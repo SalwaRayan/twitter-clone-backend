@@ -45,7 +45,12 @@ const UserSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: 'Tweet'
   }],
-  comments: [{
+  retweets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Tweet'
+  }],
+  comments: [
+    {
     type: Schema.Types.ObjectId,
     ref: 'Comment'
   }]

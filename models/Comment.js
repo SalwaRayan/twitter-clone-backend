@@ -10,8 +10,9 @@ const CommentSchema = Schema({
     ref: 'Tweet'
   },
   content: {
-    type, String,
-    maxLength: 280
+    type: String,
+    maxLength: 280,
+    required: true
   }
 }, {
   timestamps: true
