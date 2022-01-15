@@ -42,7 +42,8 @@ const UserSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: 'Tweet'
   }],
-  comments: [{
+  comments: [
+    {
     type: Schema.Types.ObjectId,
     ref: 'Comment'
   }]
