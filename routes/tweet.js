@@ -39,4 +39,8 @@ app.post('/:id/tweet', async (req, res) => {
     }
 })
 
+app.delete('/:id/tweet', (req, res) => {
+    // console.log();
+})
+
 module.exports = app
