@@ -43,7 +43,7 @@ app.post("/:idUser/:idTweet/comment", async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err });
     }
-});
+})
 
 // post a new tweet
 app.post("/:id/tweet", async (req, res) => {
