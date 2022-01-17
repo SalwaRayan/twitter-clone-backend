@@ -52,4 +52,5 @@ app.post('/banner/:id', upload.single('photo'), async (req, res) => {
   })
 })
 
+
 module.exports = app
