@@ -1,15 +1,15 @@
 const express = require('express')
-const User = require("../models/User")
 const app = express()
+const User = require("../models/User")
 
 // update user
-app.put('/:id', async (req, res) => {
-    const { id } = req.params
+app.put('/:idUser', async (req, res) => {
+    const { idUser } = req.params
 
     try {
         const user = await User.findOneAndUpdate(
             // find the user by specification id
-            { _id: id },
+            { _id: idUser },
             // update data
             {
                 $set: { ...req.body }
@@ -29,5 +29,20 @@ app.get('/', async (req, res) => {
 
     res.json(users)
 })
+
+// show a user
+app.get('/:idUser', async(req, res) => {
+    const { idUser } = req.params
+
+    const user = await User.findOne({ _id: idUser })
+        .populate('tweets')
+        .populate('comments')
+        .populate('retweets')
+        .exec()
+
+    res.json(user)
+})
+
+
 
 module.exports = app

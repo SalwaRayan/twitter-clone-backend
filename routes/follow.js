@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const app = express();
 
-app.post("/:idMyUser/:idOtherUser/follow", async (req, res) => {
+app.post("/:idMyUser/:idOtherUser", async (req, res) => {
   const { idMyUser, idOtherUser } = req.params;
 
   try {

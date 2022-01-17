@@ -47,10 +47,10 @@ app.use(passport.session())
 // routes
 app.use('/', authRoutes)
 app.use('/users', usersRoutes)
-app.use('/', tweetRoutes)
+app.use('/tweets', tweetRoutes)
 app.use('/files', filesRoutes)
-app.use('/', commentsRoutes)
-app.use('/users', followRoutes)
+app.use('/comments', commentsRoutes)
+app.use('/follow', followRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

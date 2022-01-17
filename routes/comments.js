@@ -6,9 +6,9 @@ const Tweet = require("../models/Tweet")
 const Comment = require("../models/Comment")
 
 // post a comment
-// idUser is the id of the user who comments
-// idTweet is the id of the tweet the user want to comment
-app.post("/:idUser/:idTweet/comment", async (req, res) => {
+//   idUser is the id of the user who comments
+//   idTweet is the id of the tweet the user want to comment
+app.post("/:idUser/:idTweet", async (req, res) => {
     const { idUser, idTweet } = req.params
 
     try {
@@ -47,7 +47,7 @@ app.post("/:idUser/:idTweet/comment", async (req, res) => {
 
 
 // delete a comment
-app.delete('/:idComment/comment', async (req, res) => {
+app.delete('/:idComment', async (req, res) => {
    
     // dynamic id : idComment
     const { idComment } = req.params
@@ -66,6 +66,15 @@ app.delete('/:idComment/comment', async (req, res) => {
         console.log(err)
         res.status(500).json({ error: err })
     }
+})
+
+// show a comment 
+app.get('/:idComment', async (req, res) => {
+    const { idComment } = req.params
+
+    const comment = await Comment.findOne({ _id: idComment })
+
+    res.json(comment)
 })
 
 module.exports = app
