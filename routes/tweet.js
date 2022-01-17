@@ -5,46 +5,6 @@ const User = require("../models/User");
 const Tweet = require("../models/Tweet");
 const Comment = require("../models/Comment");
 
-// post a comment
-// idUser is the id of the user who comments
-// idTweet is the id of the tweet the user want to comment
-app.post("/:idUser/:idTweet/comment", async (req, res) => {
-    const { idUser, idTweet } = req.params;
-
-    try {
-        const tweet = await Tweet.findOne({ _id: idTweet }).exec();
-
-        const comment = await new Comment({
-            ...req.body,
-        });
-
-        comment.save(async (err, comment) => {
-            if (err) {
-                res.status(500).json({ error: err });
-                return;
-            }
-
-            // add to the object comment its user => the key user of comment is the id of the user who comments
-            comment.user = idUser;
-            // add to the object comment its tweet => the key tweet of comment is the id of the tweet the user is commenting
-            comment.tweet = tweet._id;
-
-            const user = await User.findOne({ _id: idUser });
-            user.comments = [...user.comments, comment._id];
-
-            user.save();
-
-            tweet.comments = [...tweet.comments, comment._id];
-
-            tweet.save();
-
-            res.json(comment);
-        });
-    } catch (err) {
-        res.status(500).json({ error: err });
-    }
-})
-
 // post a new tweet
 app.post("/:id/tweet", async (req, res) => {
     const { id } = req.params;
@@ -55,7 +15,6 @@ app.post("/:id/tweet", async (req, res) => {
         // creation of the new tweet (instanciation)
         const tweet = await new Tweet({
             ...req.body,
-            user: id,
         });
 
         // register the new tweet made by user
@@ -66,7 +25,7 @@ app.post("/:id/tweet", async (req, res) => {
                 // by user that already exists
                 const getCurrentUser = await User.findOne({ _id: id }).exec();
 
-                tweet.user = id;
+                // tweet.user = id;
 
                 // console.log(getCurrentUser)
                 getCurrentUser.tweets.push(tweet._id);
@@ -126,44 +85,6 @@ app.post("/:idUser/:idTweet/retweet", async (req, res) => {
 
         }
 
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err })
-    }
-})
-
-app.post('/:id/tweet', async (req, res) => {
-
-
-    const { id } = req.params
-
-    try {
-        // creation of the new tweet (instanciation)
-        const tweet = await new Tweet({ ...req.body })
-
-        // register the new tweet made by user
-        tweet.save(async (err, tweet) => {
-            if (tweet) {
-
-                // each tweet is created so linked by a unique user
-                // so it is necessary to create a relation between the new tweet created
-                // by user that already exists
-
-                // 
-                tweet.user = id
-                const getCurrentUser = await User.findOne({ _id: id })
-
-                // console.log(getCurrentUser)
-                getCurrentUser.tweets.push(tweet._id)
-                getCurrentUser.save()
-
-                res.json(tweet)
-                return
-            }
-            console.log('tweet', tweet);
-            console.log(err)
-            res.status(500).json({ error: err })
-        })
     } catch (err) {
         console.log(err)
         res.status(500).json({ error: err })
