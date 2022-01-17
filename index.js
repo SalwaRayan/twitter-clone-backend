@@ -13,6 +13,7 @@ const authRoutes = require('./routes/auth')
 const usersRoutes = require('./routes/users')
 const filesRoutes = require('./routes/files')
 const tweetRoutes = require('./routes/tweet')
+const followRoutes = require('./routes/follow')
 
 const dbName = 'test'
 const dbUrl = `mongodb+srv://salwarayan:twitterclone@cluster0.66nkv.mongodb.net/${dbName}`
@@ -47,6 +48,7 @@ app.use('/', authRoutes)
 app.use('/users', usersRoutes)
 app.use('/', tweetRoutes)
 app.use('/files', filesRoutes)
+app.use('/users', followRoutes)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
