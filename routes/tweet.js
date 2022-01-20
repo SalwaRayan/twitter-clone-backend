@@ -6,120 +6,147 @@ const Tweet = require("../models/Tweet");
 
 // post a new tweet
 app.post("/:idUser", async (req, res) => {
-    const { idUser } = req.params;
+  const { idUser } = req.params;
+    console.log(req.body)
 
-    try {
-        // creation of the new tweet (instanciation)
-        const tweet = await new Tweet({
-            ...req.body,
-            user: idUser
-        });
+  try {
+    // creation of the new tweet (instanciation)
+    const tweet = await new Tweet({
+      ...req.body,
+      user: idUser
+    });
 
-        // register the new tweet made by user
-        tweet.save(async (err, tweet) => {
-            if (tweet) {
-                // each tweet is created so linked by a unique user
-                // so it is necessary to create a relation between the new tweet created
-                // by user that already exists
-                const getCurrentUser = await User.findOne({ _id: idUser }).exec()
+    // register the new tweet made by user
+    tweet.save(async (err, tweet) => {
+      if (tweet) {
+        // each tweet is created so linked by a unique user
+        // so it is necessary to create a relation between the new tweet created
+        // by user that already exists
+        const getCurrentUser = await User.findOne({ _id: idUser }).exec();
 
-                // console.log(getCurrentUser)
-                getCurrentUser.tweets.push(tweet._id);
-                getCurrentUser.save();
+        // console.log(getCurrentUser)
+        getCurrentUser.tweets.push(tweet._id);
+        getCurrentUser.save();
 
-                res.json(tweet);
-                return;
-            }
-            console.log("tweet", tweet);
-            console.log(err);
-            res.status(500).json({ error: err });
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: err });
-    }
+        res.json(tweet);
+        return;
+      }
+      console.log("tweet", tweet);
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
+  }
 });
 
 // retweet
 app.post("/:idUser/:idTweet/retweet", async (req, res) => {
-    const { idUser, idTweet } = req.params;
-    try {
-        const retweetExist = await User.findOne({ retweets: idTweet }).exec();
+  const { idUser, idTweet } = req.params;
+  try {
+    const retweetExist = await User.findOne({ retweets: idTweet }).exec();
 
-        if (!retweetExist) {
-            const tweet = await Tweet.findOne({ _id: idTweet }).exec();
-            const user = await User.findOne({ _id: idUser }).exec()
+    if (!retweetExist) {
+      const tweet = await Tweet.findOne({ _id: idTweet }).exec();
+      const user = await User.findOne({ _id: idUser }).exec();
 
-            user.retweets = [...user.retweets, idTweet];
-            tweet.retweets = [...tweet.retweets, idUser];
+      user.retweets = [...user.retweets, idTweet];
+      tweet.retweets = [...tweet.retweets, idUser];
 
-            tweet.save(async (err) => {
-                if (err) {
-                    res.status(500).json({ error: err })
-                    return;
-                }
-            });
-
-            user.save(async (err) => {
-                if (err) {
-                    res.status(500).json({ error: err });
-                    return;
-                }
-            });
-
-            res.json([
-                user,
-                tweet
-            ]);
-        } else {
-            await User.findOneAndUpdate({ retweets: idTweet }, { $pull: { retweets: idTweet } })
-            await Tweet.findOneAndUpdate({ retweets: idUser }, { $pull: { retweets: idUser } })
-
-            res.json({ retweet: "removed" })
+      tweet.save(async (err) => {
+        if (err) {
+          res.status(500).json({ error: err });
+          return;
         }
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err })
+      });
+
+      user.save(async (err) => {
+        if (err) {
+          res.status(500).json({ error: err });
+          return;
+        }
+      });
+
+      res.json([user, tweet]);
+    } else {
+      await User.findOneAndUpdate(
+        { retweets: idTweet },
+        { $pull: { retweets: idTweet } }
+      );
+      await Tweet.findOneAndUpdate(
+        { retweets: idUser },
+        { $pull: { retweets: idUser } }
+      );
+
+      res.json({ retweet: "removed" });
     }
-})
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
+  }
+});
 
 // route created to delete a tweet
-app.delete('/:idTweet', async (req, res) => {
+app.delete("/:idTweet", async (req, res) => {
+  // get the tweet id in order for target it first
+  const { idTweet } = req.params;
 
-    // get the tweet id in order for target it first
-    const { idTweet } = req.params
+  try {
+    // delete the current tweet once its id retrieved
+    await Tweet.findOneAndDelete({ _id: idTweet }).exec();
+    // find the current user who posted the tweet with an id and remove the id of the tweet from the tweets Array of User
+    await User.findOneAndUpdate(
+      { tweets: idTweet },
+      { $pull: { tweets: idTweet } }
+    );
 
-    try {
-        // delete the current tweet once its id retrieved
-        await Tweet.findOneAndDelete({ _id: idTweet }).exec()
-        // find the current user who posted the tweet with an id and remove the id of the tweet from the tweets Array of User
-        await User.findOneAndUpdate({ tweets: idTweet }, { $pull: { tweets: idTweet } })
-
-        res.json({ success: 'Tweet deleted' })
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: err })
-    }
-})
+    res.json({ success: "Tweet deleted" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
+  }
+});
 
 // show a tweet
-app.get('/:idTweet', async (req, res) => {
-    const { idTweet } = req.params
+app.get("/:idTweet", async (req, res) => {
+  const { idTweet } = req.params;
 
-    const tweet = await Tweet.findOne({ _id: idTweet }).exec()
+  const tweet = await Tweet.findOne({ _id: idTweet })
+  .populate('user')
+  .exec();
 
-    res.json(tweet)
+  res.json(tweet);
+});
+
+//show all tweets
+app.get("/", async (req, res) => {
+  const tweets = await Tweet.find().sort({ createdAt: -1 })
+  .populate('user')
+  .exec();
+
+  res.json(tweets);
+});
+
+//show all tweet connected user
+app.get('/:idUser/tweets', async (req, res) => {
+    const { idUser } = req.params
+
+    const user = await User.findById(idUser).exec()
+    const tweets = await Tweet.find({ $in: [{ user: idUser }, {user: user.following }]}).populate('user').sort({ createdAt: -1 }).exec()
+
+    res.json(tweets)
 })
 
 // show all comments of a tweet
-app.get('/comments/:idTweet', async (req, res) => {
-    const { idTweet } = req.params
+app.get("/comments/:idTweet", async (req, res) => {
+  const { idTweet } = req.params;
 
-    const tweet = await Tweet.findOne({ _id: idTweet })
-        .populate('comments')
-        .exec()
+  const tweet = await Tweet.findOne({ _id: idTweet })
+    .populate("comments")
+    .exec();
 
-    res.json(tweet)
-})
+  res.json(tweet);
+});
 
-module.exports = app
+module.exports = app;

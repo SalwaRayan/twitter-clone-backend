@@ -7,15 +7,20 @@ const passport = require("../config/passport");
 const User = require("../models/User");
 
 // login route
-app.post("/login", passport.authenticate("local"), async (req, res) => {
-  console.log(req.user);
-  if (req.user) {
-    req.logIn(req.user, (err) => {
-      if (err) throw res.status(500).json({ error: err });
-      return res.json(req.user);
-    });
+app.post("/login", 
+  body("email").isEmail().withMessage("email is not valid"),
+  body("password").isStrongPassword().withMessage("password is not valid"),
+  passport.authenticate("local"), 
+  async (req, res) => {
+    console.log(req.user);
+    if (req.user) {
+      req.logIn(req.user, (err) => {
+        if (err) throw res.status(500).json({ error: err });
+        return res.json(req.user);
+      });
+    }
   }
-});
+);
 
 // logout route
 app.delete("/logout", (req, res) => {
@@ -27,8 +32,9 @@ app.delete("/logout", (req, res) => {
 app.post(
   "/signup",
   body("username").exists(),
-  body("email").exists().isEmail().withMessage("isInvalid"),
-  body("password").exists().isStrongPassword(),
+  body("email").exists().isEmail().withMessage("mail is not valid"),
+  body("password").exists().isStrongPassword().withMessage("password is not valid"),
+  // body("birthDate").exists().isDate().withMessage("birthdate is not valid"),
   async (req, res) => {
     try {
       // const { email, username } = req.body

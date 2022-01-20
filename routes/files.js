@@ -52,5 +52,14 @@ app.post('/banner/:id', upload.single('photo'), async (req, res) => {
   })
 })
 
+app.post('/photo', upload.single('photo'), async (req, res) => {
+  const date = moment().format('DD-MM-YYYY-hh-mm-ss')
+  const fileName = `${date}-${req.file.originalname}`
+  const photoUrl = `${req.file.destination}/${fileName}`
+  
+  fs.renameSync(req.file.path, photoUrl)
+
+  res.json({ success: "yes" })
+})
 
 module.exports = app

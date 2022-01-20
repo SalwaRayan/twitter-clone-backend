@@ -22,12 +22,12 @@ passport.use(new LocalStrategy({ usernameField: "email" }, async (username, pass
 }))
 
 passport.serializeUser((user, done) => {
-  done(null, user.id)
+  done(null, user._id)
 })
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const user = User.findOne({ _id: id }) 
+    const user = await User.findById(id).exec()
     done(null, user)
   } catch (err) {
     console.log(err)
