@@ -31,10 +31,10 @@ app.get('/', async (req, res) => {
 })
 
 // show a user
-app.get('/:idUser', async(req, res) => {
-    const { idUser } = req.params
+app.get('/:username', async(req, res) => {
+    const { username } = req.params
 
-    const user = await User.findOne({ _id: idUser })
+    const user = await User.findOne({ username: username })
         .populate('tweets')
         .populate('comments')
         .populate('retweets')
