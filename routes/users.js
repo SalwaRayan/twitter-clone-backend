@@ -33,14 +33,14 @@ app.get("/", async (req, res) => {
 });
 
 // show a user
-app.get("/:usename", async (req, res) => {
-  const { username } = req.params;
+app.get('/:username', async(req, res) => {
+    const { username } = req.params
 
-  const user = await User.findOne({ username: username })
-    .populate("tweets")
-    .populate("comments")
-    .populate("retweets")
-    .exec();
+    const user = await User.findOne({ username: username })
+        .populate('tweets')
+        .populate('comments')
+        .populate('retweets')
+        .exec()
 
   res.json(user);
 });
