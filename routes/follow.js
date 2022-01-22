@@ -15,10 +15,10 @@ app.post("/:idMyUser/:idOtherUser", async (req, res) => {
       .find({ following: idOtherUser })
       .exec();
 
+    // const addFollowing = User.findByIdAndUpdate(idMyUser, {$push: {following:})
+
     const user = await User.findById(idMyUser).exec();
     const otherUser = await User.findById(idOtherUser).exec();
-
-    // const addFollowing = User.findByIdAndUpdate(idMyUser, {$push: {following:})
 
     if (followingExist.length === 0) {
       user.following = [...user.following, idOtherUser];
@@ -40,39 +40,9 @@ app.post("/:idMyUser/:idOtherUser", async (req, res) => {
 
       res.json(user);
     } else {
-      await User.findOneAndUpdate({ _id: idMyUser }, { $pull : { following: idOtherUser }}).exec()
-      await User.findOneAndUpdate({ _id: idOtherUser }, { $pull : { followers: idMyUser }}).exec()
-
-      const user = User.findById(idMyUser)
-
-      //const userIndex = user.following.findById(following => following === idOtherUser)
-      //user.following.splice(userIndex, 1)
-
-      //const otherUserIndex = otherUser.followers.findById(follower => follower === idMyUser)
-      //otherUser.followers.splice(otherUserIndex, 1)
-
-      // user.save((err, user) => {
-      //   if(user) {
-      //     user.update({ $pull: { following: idOtherUser } });
-      //   }
-      //   // if (err) {
-      //   //   res.status(500).json({ error: err });
-      //   //   return;
-      //   // }
-      // });
-
-      // otherUser.save((err, otherUser) => {
-      //   if(otherUser) {
-      //     otherUser.update({ $pull: { followers: idMyUser } });
-          
-      //   }
-      //   // if (err) {
-      //   //   res.status(500).json({ error: err });
-      //   //   return;
-      //   // }
-      // });
-
-      // res.json(user);
+      const user = await User.findOneAndUpdate({ _id: idMyUser }, { $pull : { following: idOtherUser }}, { new: true }).exec()
+      const otherUser = await User.findOneAndUpdate({ _id: idOtherUser }, { $pull : { followers: idMyUser }}, { new: true }).exec()
+      
       res.json(user);
     }
   } catch (err) {
