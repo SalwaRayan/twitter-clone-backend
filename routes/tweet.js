@@ -114,6 +114,7 @@ app.get("/:idTweet", async (req, res) => {
 
   const tweet = await Tweet.findOne({ _id: idTweet })
   .populate('user')
+  .populate('comments')
   .exec();
 
   res.json(tweet);
