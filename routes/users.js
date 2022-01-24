@@ -57,22 +57,6 @@ app.get("/get/following", async (req, res) => {
         console.log(err)
         res.status(500).json({ error: err })
     }
-
-    // console.log("route get random")
-    // const count = await User.countDocuments()
-    // let random1 = Math.floor(Math.random() * count);
-    // let random2 = Math.floor(Math.random() * count);
-
-    // console.log(count)
-    // User.countDocuments().exec((err, count) => {
-    //   console.log("count", count)
-    // console.log("random1", random1)
-    // User.findOne()
-    //   .skip(random1)
-    //   .exec((err, result) => {
-    //     console.log("result1", result);
-    //   });
-//   });
 });
 
 module.exports = app;

@@ -16,6 +16,8 @@ app.post("/:idUser/:idTweet", async (req, res) => {
 
         const comment = await new Comment({
             ...req.body,
+            user: idUser,
+            tweet: idTweet
         })
 
         comment.save(async (err, comment) => {
@@ -25,16 +27,16 @@ app.post("/:idUser/:idTweet", async (req, res) => {
             }
 
             // add to the object comment its user => the key user of comment is the id of the user who comments
-            comment.user = idUser;
+            // comment.user = idUser;
             // add to the object comment its tweet => the key tweet of comment is the id of the tweet the user is commenting
-            comment.tweet = tweet._id;
+            // comment.tweet = tweet._id;
 
             const user = await User.findOne({ _id: idUser })
-            user.comments = [...user.comments, comment._id]
+            user.comments = [ comment._id, ...user.comments]
 
             user.save()
 
-            tweet.comments = [...tweet.comments, comment._id]
+            tweet.comments = [ comment._id, ...tweet.comments]
 
             tweet.save()
 

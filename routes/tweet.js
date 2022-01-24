@@ -3,6 +3,7 @@ const app = express();
 
 const User = require("../models/User");
 const Tweet = require("../models/Tweet");
+const Comment = require("../models/Comment")
 
 // post a new tweet
 app.post("/:idUser", async (req, res) => {
@@ -140,14 +141,26 @@ app.get('/:idUser/tweets', async (req, res) => {
 })
 
 // show all comments of a tweet
+
+// app.get("/comments/:idTweet", async (req, res) => {
+//   const { idTweet } = req.params;
+
+//   const tweet = await Tweet.findOne({ _id: idTweet })
+//     .populate("comments")
+//     .exec();
+
+//   res.json(tweet);
+// });
+
 app.get("/comments/:idTweet", async (req, res) => {
   const { idTweet } = req.params;
 
-  const tweet = await Tweet.findOne({ _id: idTweet })
-    .populate("comments")
+  const comments = await Comment.find({ tweet: idTweet })
+    .populate("user")
+    .populate("tweet")
     .exec();
 
-  res.json(tweet);
+  res.json(comments);
 });
 
 module.exports = app;
